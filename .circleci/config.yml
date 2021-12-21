@@ -184,13 +184,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: |
-            apk add --update curl nodejs npm
-            apk add --update ansible gzip curl openssh-client 
-            apk add --no-cache tar
-            pip install awscli
-      - run:
           name: Run migrations
           command: |
             cd backend
