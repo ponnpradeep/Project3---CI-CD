@@ -152,6 +152,28 @@ jobs:
       - destroy_environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
+  configure-infrastructure:
+    docker:
+      - image: python:latest
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: [ "98:40:0a:94:18:51:3c:ac:65:b7:b0:16:41:a4:5c:d7" ]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible gzip curl openssh-client
+            apk add --no-cache tar
+            pip install awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt configure-server.yml
+      # Here's where you will add some code to rollback on failure  
+
 workflows:
   default:
     jobs:
@@ -170,3 +192,5 @@ workflows:
           filters:
             branches:
               only: [ main ]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
