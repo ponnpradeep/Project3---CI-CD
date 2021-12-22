@@ -199,7 +199,7 @@ jobs:
             then
               touch ~/project/.circleci/outputs/db_migrated_successfully
             fi
-            cat ~/project/backend/migrations_dump.txt | grep -q "has been executed successfully."
+            cat ~/project/backend/migrations_dump.txt
       - persist_to_workspace:
           root: ~/
           paths:
