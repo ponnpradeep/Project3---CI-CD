@@ -270,8 +270,6 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
-            mkdir -p ~/project/.circleci/ansible/roles/roles/deploy/files/
-            cp -p  ~/project/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files/
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy_environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   

@@ -1,32 +1,15 @@
 ---
-- name: "Creates backend app directory"
-  file:
-    path: ~/backend_app
-    state: directory
-
-- name: "Copy compiled backend app"
+- name: "Move backend files to server."
   copy:
-    src: artifact.tar.gz
-    dest: "~/backend_app/artifact.tar.gz"
+    src: /root/project/artifact.tar.gz
+    dest: ~/home/ubuntu
 
-- name: "Unzip backend files to correct directory"
+- name: "Install package dependencies"
   shell: |
-    cd ~/backend_app
-    tar -xvzf artifact.tar.gz
-    rm -rf artifact.tar.gz
-
-- name: "Install dependencies for project"
-  shell: |
-    cd ~/backend_app
-    npm install
-
-- name: "Executing node"
-  shell: |
-    export
-    cd ~/backend_app
-    pm2 start main.js
-  register: execute_node
-
-- name: "Configure pm2 to start as service"
-  shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+    cd ~/home/ubuntu
+    tar -xzvf artifact.tar.gz -C backend
+    rm artifact.tar.gz
+    cd backend/
+    npm run build
+    cd dist
+    pm2 start npm --name backend -- start
