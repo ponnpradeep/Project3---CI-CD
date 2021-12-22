@@ -16,9 +16,11 @@
     
 - name: "Check and install npm"
   become: true
+  become_user: root
+  become_method: sudo
   command: 
-     sudo apt update
-     sudo apt-get --assume-yes install nodejs npm
+     apt update
+     apt-get --assume-yes install nodejs npm
   args:
       chdir: /home/ubuntu/
 
