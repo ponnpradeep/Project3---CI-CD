@@ -199,6 +199,7 @@ jobs:
             then
               touch ~/project/.circleci/outputs/db_migrated_successfully
             fi
+            cat ~/project/backend/migrations_dump.txt | grep -q "has been executed successfully."
       - persist_to_workspace:
           root: ~/
           paths:
@@ -221,8 +222,16 @@ jobs:
       - run:
           name: Get backend url
           command: |
+            BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
+            echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> .circleci/outputs/backend_url.txt
             cat .circleci/outputs/backend_url.txt >> frontend/.env
             cat frontend/.env
+            export API_URL="http://${BACKEND_AWS_PUBLIC_IP}:3030"
+            echo "API_URL = ${API_URL}"
       - run:
           name: Deploy frontend objects
           command: |
@@ -246,6 +255,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update curl nodejs npm
             apk add --update ansible gzip curl openssh-client
             apk add --no-cache tar
             pip install awscli
