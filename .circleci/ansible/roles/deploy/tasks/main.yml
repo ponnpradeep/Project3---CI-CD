@@ -18,7 +18,7 @@
 - name: "Check and install npm"
   become: true
   command: npm install
-    args:
+  args:
       chdir: /home/ubuntu/backend
 
 - name: "delete anything that might already be running"
@@ -29,6 +29,6 @@
 - name: "start server"
   become: true
   command: pm2 start -f ./main.js
-    args:
+  args:
       chdir: /home/ubuntu/backend/dist
 
