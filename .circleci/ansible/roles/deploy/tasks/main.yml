@@ -13,13 +13,12 @@
   shell: |
     cd /home/ubuntu
     tar -xzvf artifact.tar.gz 
-    rm artifact.tar.gz
-
+    
 - name: "Check and install npm"
   become: true
-  command: npm install
+  command: sudo apt install npm
   args:
-      chdir: /home/ubuntu/backend
+      chdir: /home/ubuntu/
 
 - name: "delete anything that might already be running"
   become: true
@@ -30,5 +29,5 @@
   become: true
   command: pm2 start -f ./main.js
   args:
-      chdir: /home/ubuntu/backend/dist
+      chdir: /home/ubuntu/dist
 
