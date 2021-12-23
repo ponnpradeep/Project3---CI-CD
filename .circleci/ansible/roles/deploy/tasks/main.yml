@@ -21,6 +21,7 @@
   command: 
 #     apt update
      apt-get --assume-yes install nodejs npm
+     npm i -g pm2
   args:
       chdir: /home/ubuntu/
 
