@@ -19,7 +19,7 @@
   become_user: root
   become_method: sudo
   command: 
-     apt update
+#     apt update
      apt-get --assume-yes install nodejs npm
   args:
       chdir: /home/ubuntu/
