@@ -26,14 +26,14 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
-            if(( $SUCCESS==1 ));
-            then
+# Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+#            SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
+#            if(( $SUCCESS==1 ));
+#            then
               cd ~/project/backend
               npm install
               npm run migrations:revert
-            fi
+#            fi
              
 jobs:
   build-frontend:
