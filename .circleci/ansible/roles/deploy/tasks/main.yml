@@ -1,35 +1,23 @@
 ---
-- name: "Move backend files to server."
+- name: create backend directory
+  become: yes
+  file:
+    path: ~/backend
+    state: directory
+    mode: 0755
+
+- name: copy backend files
+  become: yes
   copy:
-    src: /root/project/artifact.tar.gz
-    dest: /home/ubuntu
+    src: ~/project/backend/artifact.tar.gz
+    dest: ~/backend/artifact.tar.gz
 
-- name: "Check for tar file"
-  become: true
-  command:
-      ls -l /home/ubuntu/artifact.tar.gz
-
-- name: "Install package dependencies"
+- name: untar backend files
+  become: yes
   shell: |
-    cd /home/ubuntu
-    tar -xzvf artifact.tar.gz 
-    
-- name: "Check and install npm"
-  become: true
-  become_user: root
-  become_method: sudo
-  command: 
-#     apt update
-#     apt-get --assume-yes install nodejs npm
-      apt install --assume-yes npm nodesjs 1> apt.out 2> apt.err
-     npm i pm2 -g 
-  args:
-      chdir: /home/ubuntu/
-
-- name: "delete anything that might already be running"
-  become: true
-  command: pm2 delete all
-  ignore_errors: true
+    cd ~/backend
+    tar -vxf artifact.tar.gz
+    rm -f artifact.tar.gz
 
 - name: "start server"
   become: yes
