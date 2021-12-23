@@ -289,7 +289,7 @@ jobs:
             sudo apt install -y awscli
             aws --version
       - run:
-          name: Get backend url
+          name: Backend smoke test.
           command: |
             BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
@@ -301,16 +301,13 @@ jobs:
             cat frontend/.env
             export API_URL="http://${BACKEND_AWS_PUBLIC_IP}:3030"
             echo "API_URL = ${API_URL}"
-      - run:
-          name: Backend smoke test.
-          command: |
-           if curl "${API_URL}/api/status" | grep "ok"
+            if curl "${API_URL}/api/status" | grep "ok"
             then
-              echo SUCCESS
-              exit 0
+                echo SUCCESS
+                exit 0
             else
-              echo FAIL
-              exit 1
+                 echo FAIL
+                 exit 1
             fi
       - run:
           name: Frontend smoke test.
@@ -325,8 +322,8 @@ jobs:
               echo FAIL
               exit 1
             fi
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+#      - destroy_environment:
+#          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
                        
 
 workflows:
