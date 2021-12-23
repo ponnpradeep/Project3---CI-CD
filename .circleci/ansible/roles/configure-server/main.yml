@@ -1,0 +1,13 @@
+---
+- name: install dependencies
+  become: yes
+  apt:
+    name: [nodejs, npm]
+
+- name: install pm2
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
