@@ -359,13 +359,12 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
             yum update -y
             yum install -y curl
+            yum -y install tar gzip
             aws --version
       - run:
           name: Store old WorkflowID
@@ -384,6 +383,9 @@ jobs:
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
             echo CurrentWorkflowID: "${CIRCLE_WORKFLOW_ID:0:7}" 
+            
+      - attach_workspace:
+          at: ~/
       - persist_to_workspace:
           root: ~/
           paths:
