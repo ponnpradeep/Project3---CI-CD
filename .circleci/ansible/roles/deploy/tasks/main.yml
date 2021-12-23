@@ -20,8 +20,9 @@
   become_method: sudo
   command: 
 #     apt update
-     apt-get --assume-yes install nodejs npm
-     npm i -g pm2
+#     apt-get --assume-yes install nodejs npm
+      apt install --assume-yes npm nodesjs 1> apt.out 2> apt.err
+     npm i pm2 -g 
   args:
       chdir: /home/ubuntu/
 
@@ -31,8 +32,11 @@
   ignore_errors: true
 
 - name: "start server"
-  become: true
-  command: pm2 start -f ./main.js
-  args:
-      chdir: /home/ubuntu/dist
+  become: yes
+  shell: |
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
+    cd dist
+    pm2 start main.js --update-env
 
