@@ -256,7 +256,7 @@ jobs:
             cat .circleci/outputs/backend_url.txt >> frontend/.env
             cat frontend/.env
             export API_URL="http://${BACKEND_AWS_PUBLIC_IP}:3030"
-            echo "API_URL = ${API_URL}"
+            echo "API_URL = ${API_URL}" >> frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -455,9 +455,9 @@ workflows:
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-backend:
-          requires: [run-migrations]
+          requires: [run-migrations ]
       - deploy-frontend:
-          requires: [run-migrations, deploy-backend]
+          requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
